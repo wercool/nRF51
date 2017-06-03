@@ -90,6 +90,8 @@ public class BTDevicesActivity extends AppCompatActivity
         }
 
 
+        boolean startScanning = true;
+
         if (nRF51.mBluetoothAdapter == null)
         {
             Context context = getApplicationContext();
@@ -99,6 +101,7 @@ public class BTDevicesActivity extends AppCompatActivity
 
         if (!nRF51.mBluetoothAdapter.isEnabled())
         {
+            startScanning = false;
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
@@ -114,7 +117,10 @@ public class BTDevicesActivity extends AppCompatActivity
 //        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 //        registerReceiver(mReceiver, filter);
 
-        scanForDevicesButtonClick(null);
+        if (startScanning)
+        {
+            scanForDevicesButtonClick(null);
+        }
     }
 
     @Override
@@ -181,7 +187,8 @@ public class BTDevicesActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == 333)
         {
-            Toast.makeText(getApplicationContext(), "Bluetooth is enabled", Toast.LENGTH_LONG).show();;
+            Toast.makeText(getApplicationContext(), "Bluetooth is enabled", Toast.LENGTH_LONG).show();
+            scanForDevicesButtonClick(null);
         }
     }
 

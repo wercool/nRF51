@@ -57,30 +57,40 @@ public class BTDeviceActivity extends AppCompatActivity implements BluetoothLeUa
 
         Log.i(nRF51.TAG, "Selected BT Device address: " + nRF51.selectedBTDevice.getAddress());
 
-        // Initialize UART.
-        uart = new BluetoothLeUart(getApplicationContext());
-        uart.unregisterCallback(this);
-        uart.disconnect();
-        uart.registerCallback(this);
-        uart.connectGATT(nRF51.selectedBTDevice);
+        onResume();
+    }
 
-        nRF51.BLEuart = uart;
+    @Override
+    protected void onResume()
+    {
+        super.onStop();
 
-//        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-//        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-//        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//        mBluetoothGatt.writeDescriptor(descriptor);
+        if (nRF51.BLEuart == null)
+        {
+            // Initialize UART.
+            uart = new BluetoothLeUart(getApplicationContext());
+            uart.unregisterCallback(this);
+            uart.disconnect();
+            uart.registerCallback(this);
+            uart.connectGATT(nRF51.selectedBTDevice);
 
+            nRF51.BLEuart = uart;
+        }
+        else if (nRF51.BLEuart.isConnected())
+        {
+            nRF51.BLEuart = null;
+            onResume();
+        }
     }
 
     // OnStop, called right before the activity loses foreground focus.  Close the BTLE connection.
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        uart.unregisterCallback(this);
-        uart.disconnect();
-    }
+//    @Override
+//    protected void onStop()
+//    {
+//        super.onStop();
+//        uart.unregisterCallback(this);
+//        uart.disconnect();
+//    }
 
     @Override
     public void onConnected(BluetoothLeUart uart)
@@ -103,7 +113,7 @@ public class BTDeviceActivity extends AppCompatActivity implements BluetoothLeUa
     @Override
     public void onReceive(BluetoothLeUart uart, BluetoothGattCharacteristic rx) {
         // Called when data is received by the UART.
-        writeLine("Received: " + rx.getStringValue(0));
+        writeLine(rx.getStringValue(0));
     }
 
     @Override
