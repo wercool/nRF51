@@ -25,8 +25,29 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
         if (nRF51.BLEuart != null)
         {
+            if (nRF51.BLEuartCallback != null)
+            {
+                nRF51.BLEuart.unregisterCallback(nRF51.BLEuartCallback);
+            }
             nRF51.BLEuart.disconnect();
+            nRF51.BLEuart = null;
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        // RUN SUPER | REGISTER ACTIVITY AS NULL IN APP CLASS
+
+        super.onDestroy();
+        this.finish();
+        System.exit(0);
+    }
+
+    public void exit(View v)
+    {
+        finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     public void scanForDevicesButtonClick(View view)

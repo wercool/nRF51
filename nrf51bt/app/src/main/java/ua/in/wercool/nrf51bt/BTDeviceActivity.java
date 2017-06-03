@@ -57,7 +57,9 @@ public class BTDeviceActivity extends AppCompatActivity implements BluetoothLeUa
 
         Log.i(nRF51.TAG, "Selected BT Device address: " + nRF51.selectedBTDevice.getAddress());
 
-        onResume();
+        nRF51.BLEuartCallback = this;
+
+        initBLEuart();
     }
 
     @Override
@@ -65,21 +67,19 @@ public class BTDeviceActivity extends AppCompatActivity implements BluetoothLeUa
     {
         super.onStop();
 
+        initBLEuart();
+    }
+
+    private void initBLEuart()
+    {
         if (nRF51.BLEuart == null)
         {
             // Initialize UART.
             uart = new BluetoothLeUart(getApplicationContext());
-            uart.unregisterCallback(this);
-            uart.disconnect();
-            uart.registerCallback(this);
+            uart.registerCallback(nRF51.BLEuartCallback);
             uart.connectGATT(nRF51.selectedBTDevice);
 
             nRF51.BLEuart = uart;
-        }
-        else if (nRF51.BLEuart.isConnected())
-        {
-            nRF51.BLEuart = null;
-            onResume();
         }
     }
 
