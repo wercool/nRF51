@@ -23,5 +23,12 @@
             android:onClick="scanForDevicesButtonClick"
             android:minHeight="50dp" />
 
+        <Button
+            android:text="Test Server Connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/testServerConnectionButton"
+            android:onClick="testServerConnectionButtonClick" />
+
     </LinearLayout>
 </RelativeLayout>

@@ -18,5 +18,5 @@ public class NRF51 extends Application
     public BluetoothDevice selectedBTDevice                 = null;
     public BluetoothLeUart BLEuart                          = null;
     public BTDeviceActivity BLEuartCallback                 = null;
-
+    public ServerConnectionHandler serverConnectionHandler  = null;
 }
